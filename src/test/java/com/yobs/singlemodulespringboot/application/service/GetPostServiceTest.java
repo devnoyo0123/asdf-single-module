@@ -1,14 +1,23 @@
 package com.yobs.singlemodulespringboot.application.service;
 
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.yobs.singlemodulespringboot.adapter.out.persistence.JpaPostRepository;
+import com.yobs.singlemodulespringboot.adapter.out.persistence.PostJpaEntity;
 import com.yobs.singlemodulespringboot.application.port.in.CreatePostCommand;
 import com.yobs.singlemodulespringboot.application.port.in.GetPostQuery;
+import com.yobs.singlemodulespringboot.application.port.in.GetPostsQuery;
 import com.yobs.singlemodulespringboot.application.port.out.CreatePostRepository;
 import com.yobs.singlemodulespringboot.application.port.out.GetPostRepository;
 import com.yobs.singlemodulespringboot.domain.Post;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -21,6 +30,15 @@ class GetPostServiceTest {
 
     @Autowired
     private GetPostRepository getPostRepository;
+
+    @Autowired
+    private JpaPostRepository jpaPostRepository;
+
+
+    @BeforeEach
+    void clean() {
+        this.jpaPostRepository.deleteAll();
+    }
 
 
     @Test
@@ -39,6 +57,27 @@ class GetPostServiceTest {
         assertNotNull(getPost);
         assertEquals(createdPost.getTitle(),getPost.getTitle());
         assertEquals(createdPost.getContent(),getPost.getContent());
+
+    }
+
+    @Test
+    @DisplayName("Post 페이징 조회")
+    void test2() {
+
+        //given
+
+        List<PostJpaEntity> requestPosts = IntStream.range(0,20)
+                .mapToObj(i -> new PostJpaEntity(null, "foo"+i, "bar"+i))
+                .collect(Collectors.toList());
+
+        jpaPostRepository.saveAll(requestPosts);
+
+        // when
+        var getPosts = this.getPostRepository.getPosts(new GetPostsQuery(1, 10));
+
+        // then
+        assertNotNull(getPosts);
+        assertEquals(getPosts.get(0).getTitle(), requestPosts.get(requestPosts.size()-1).getTitle());
 
     }
 }
