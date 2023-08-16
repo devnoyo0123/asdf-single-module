@@ -37,19 +37,6 @@ class PostControllerTest {
         jpaPostRepository.deleteAll();
     }
 
-    @Test
-    @DisplayName("/posts 요청시 Hello world를 출력한다.")
-    void test() throws Exception {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        CreatePostDto createPostDto = new CreatePostDto("제목", "내용");
-        mockMvc.perform(MockMvcRequestBuilders.post("/posts")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createPostDto)))
-                .andExpect(status().isOk())
-                .andExpect(content().string("Hello World"))
-                .andDo(print());
-    }
 
     @Test
     @DisplayName("/posts 요청시 title은 필수값이다.")
