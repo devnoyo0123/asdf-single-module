@@ -1,7 +1,6 @@
 package com.yobs.singlemodulespringboot.application.service;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.yobs.singlemodulespringboot.adapter.out.persistence.JpaPostRepository;
+import com.yobs.singlemodulespringboot.adapter.out.persistence.PostJpaRepository;
 import com.yobs.singlemodulespringboot.adapter.out.persistence.PostJpaEntity;
 import com.yobs.singlemodulespringboot.application.port.in.CreatePostCommand;
 import com.yobs.singlemodulespringboot.application.port.in.GetPostQuery;
@@ -32,12 +31,12 @@ class GetPostServiceTest {
     private GetPostRepository getPostRepository;
 
     @Autowired
-    private JpaPostRepository jpaPostRepository;
+    private PostJpaRepository postJpaRepository;
 
 
     @BeforeEach
     void clean() {
-        this.jpaPostRepository.deleteAll();
+        this.postJpaRepository.deleteAll();
     }
 
 
@@ -70,7 +69,7 @@ class GetPostServiceTest {
                 .mapToObj(i -> new PostJpaEntity(null, "foo"+i, "bar"+i))
                 .collect(Collectors.toList());
 
-        jpaPostRepository.saveAll(requestPosts);
+        postJpaRepository.saveAll(requestPosts);
 
         // when
         var getPosts = this.getPostRepository.getPosts(new GetPostsQuery(1, 10));

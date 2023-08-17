@@ -2,7 +2,7 @@ package com.yobs.singlemodulespringboot.adapter.in.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yobs.singlemodulespringboot.adapter.in.web.dto.CreatePostDto;
-import com.yobs.singlemodulespringboot.adapter.out.persistence.JpaPostRepository;
+import com.yobs.singlemodulespringboot.adapter.out.persistence.PostJpaRepository;
 import com.yobs.singlemodulespringboot.application.port.out.CreatePostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -30,11 +30,11 @@ class PostControllerTest {
     private CreatePostRepository createPostRepository;
 
     @Autowired
-    private JpaPostRepository jpaPostRepository;
+    private PostJpaRepository postJpaRepository;
 
     @BeforeEach
     void clean() {
-        jpaPostRepository.deleteAll();
+        postJpaRepository.deleteAll();
     }
 
 
@@ -68,7 +68,7 @@ class PostControllerTest {
                 .andDo(print());
 
         // then
-        assertEquals(1L, jpaPostRepository.count());
+        assertEquals(1L, postJpaRepository.count());
 
     }
 }

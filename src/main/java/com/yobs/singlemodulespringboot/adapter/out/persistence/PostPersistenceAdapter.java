@@ -16,19 +16,19 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class PostPersistenceAdapter implements CreatePostRepository, GetPostRepository {
     private final JPAQueryFactory jpaQueryFactory;
-    private final JpaPostRepository jpaPostRepository;
+    private final PostJpaRepository postJpaRepository;
     private final PostMapper postMapper;
 
     @Override
     public Post create(Post post) {
-        var jpaPostEntity = this.jpaPostRepository.save(postMapper.mapToJpaEntity(post));
+        var jpaPostEntity = this.postJpaRepository.save(postMapper.mapToJpaEntity(post));
         return postMapper.mapToDomainEntity(jpaPostEntity);
     }
 
 
     @Override
     public Post getPost(GetPostQuery query) {
-        var jpaPostEntity = this.jpaPostRepository.findById(query.getPostId()).orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
+        var jpaPostEntity = this.postJpaRepository.findById(query.getPostId()).orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
         return postMapper.mapToDomainEntity(jpaPostEntity);
     }
 
