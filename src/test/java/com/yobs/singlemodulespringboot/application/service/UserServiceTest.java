@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,6 +20,9 @@ class UserServiceTest {
 
     @Autowired
     private SignUpUseCase signUpUseCase;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void clean() {
@@ -55,7 +59,7 @@ class UserServiceTest {
 
         var jpaUserEntity = userJpaRepository.findAll().stream().findFirst().orElseThrow(() -> new IllegalArgumentException("잘못된 요청입니다."));
         assertEquals(email, jpaUserEntity.getEmail());
-        assertEquals(password, jpaUserEntity.getPassword());
+        assertTrue(passwordEncoder.matches(signUpCommand.getPassword(), jpaUserEntity.getPassword()));
 
     }
 }
