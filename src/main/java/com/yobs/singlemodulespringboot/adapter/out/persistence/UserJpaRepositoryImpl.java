@@ -5,6 +5,8 @@ import com.yobs.singlemodulespringboot.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 @RequiredArgsConstructor
 public class UserJpaRepositoryImpl implements UserJpaRepositoryCustom {
@@ -12,7 +14,7 @@ public class UserJpaRepositoryImpl implements UserJpaRepositoryCustom {
     private final UserMapper userMapper;
 
     @Override
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         var userJpaEntity = jpaQueryFactory.selectFrom(QUserJpaEntity.userJpaEntity)
                 .where(QUserJpaEntity.userJpaEntity.email.eq(email))
                 .fetchOne();
